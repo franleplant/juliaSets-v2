@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/flp/Code/juliaSets-v2/src/calc/index.js":[function(require,module,exports){
 'use strict';
 
 //z^2
@@ -22,7 +22,7 @@ module.exports = {
 	norm: norm
 }
 
-},{}],2:[function(require,module,exports){
+},{}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
 /**
  * HSV to RGB color conversion
  *
@@ -122,86 +122,93 @@ function color(i) {
 };
 
 module.exports = color;
-},{}],3:[function(require,module,exports){
+},{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
 (function () {
 
-//constantes globales
-var MAX_ITER = 30;
+  //constantes globales
+  var MAX_ITER = 100;
 
-this.c = [-0.8 ,0];
-this.k = 8;
-this.fase = 210;
+  this.c = [0.285 ,0];
+  this.k = 8;
+  this.fase = 210;
 
-var m = n = 200;
-//no idea what those parameters are
-
-
-
-//variables
-var i;
-var x,y;
-var xi, yi;
-var step = 1/n;
-var ini = 0 - step * (n/2);
-var set = [];
+  var m = n = 250;
+  //no idea what those parameters are
 
 
 
-
-var canvas = document.getElementsByTagName('canvas')[0];
-	canvas.width = n;
-	canvas.height = m;
-	canvas = canvas.getContext("2d");
-
-
-var color = require('./color');
-var calc = require('./calc');
-
-function draw_pixel(x,y,i) {
-
-	canvas.fillStyle = color.call(this, i);
-	canvas.fillRect(x,y,1,1);
-};
+  //variables
+  var i;
+  var x,y;
+  var xi, yi;
+  var step = 1/n;
+  var ini = 0 - step * (n/2);
+  var set = [];
 
 
-//initialize array values
-for (y = 0; y < n; y++){
-  set[y] = [];
-  for(x = 0; x < m; x++) {
-    //el array esta formado por [x,y, numero_de_iteraciones]
-    set[y][x] = [ini + step * x, -(ini + step*y), 0 ]
 
+  var canvas = document.getElementsByTagName('canvas')[0];
+
+  canvas.width = n;
+  canvas.height = m;
+  canvas = canvas.getContext("2d");
+
+
+  //implicit binding
+  this.color = require('./color');
+
+  //TODO: refactor this module and improve the way it is appended
+  var calc = require('./calc');
+
+  this.calc = {
+    x: calc.x.bind(this),
+    y: calc.y.bind(this),
+    norm: calc.norm.bind(this)
   }
-}
 
-console.log(set)
+  this.draw_pixel = function draw_pixel(x,y,i) {
+
+    debugger;    
+  	canvas.fillStyle = this.color(i);
+  	canvas.fillRect(x,y,1,1);
+  };
+
+
+  //initialize array values
+  for (y = 0; y < n; y++){
+    set[y] = [];
+    for(x = 0; x < m; x++) {
+      //el array esta formado por [x,y, numero_de_iteraciones]
+      set[y][x] = [ini + step * x, -(ini + step*y), 0 ]
+
+    }
+  }
 
 
 
-//calculate and draw the fractal
-for (y = 0; y < n; y++){
-  for(x = 0; x < m; x++) {
-    for (i = 0; i < MAX_ITER; i++){
+  //TODO: refactor this into an other module and test it.
+  //calculate and draw the fractal
+  for (y = 0; y < n; y++){
+    for(x = 0; x < m; x++) {
+      for (i = 0; i < MAX_ITER; i++){
 
-    	xi = calc.x.call(this,set[y][x][0],set[y][x][1]);
-    	yi = calc.y.call(this,set[y][x][0],set[y][x][1]);
-    	debugger;
-      set[y][x][0] = xi;
-      set[y][x][1] = yi
-      debugger;
-      set[y][x][2] = i;
-      //setting the inner most loop as the iteration loop makes
-      //breaking it easier thus more performant
-      if (calc.norm(set[y][x][0], set[y][x][1]) > 1) {
-        draw_pixel.call(this, set[y][x][0], set[y][x][1], set[y][x][2]);
-        break;
+        //setting the inner most loop as the iteration loop makes
+        //breaking it easier thus more performant
+        if (this.calc.norm(set[y][x][0], set[y][x][1]) > 1) {
+          this.draw_pixel(x, y, set[y][x][2]);
+          break;
+        }
+
+        set[y][x][0] = this.calc.x(set[y][x][0],set[y][x][1]);
+        set[y][x][1] = this.calc.y(set[y][x][0],set[y][x][1]);
+        set[y][x][2] += 1;
+
       }
     }
   }
-}
 
 
-
+console.log(set[20])
 
 }).call({})
 
@@ -268,4 +275,4 @@ var hsv = function (i) {
 
 
 
-},{"./calc":1,"./color":2}]},{},[3]);
+},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}]},{},["/home/flp/Code/juliaSets-v2/src/main.js"]);

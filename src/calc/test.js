@@ -1,6 +1,6 @@
 var test = require('tape');
 
-var calc = require('./calc');
+var calc = require('./index');
 
 console.log(calc)
 
