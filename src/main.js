@@ -24,11 +24,13 @@ var set = [];
 
 
 var canvas = document.getElementsByTagName('canvas')[0];
-	canvas.width = n;
-	canvas.height = m;
-	canvas = canvas.getContext("2d");
+
+canvas.width = n;
+canvas.height = m;
+canvas = canvas.getContext("2d");
 
 
+//TODO: implicit binding here
 var color = require('./color');
 var calc = require('./calc');
 
@@ -52,7 +54,7 @@ for (y = 0; y < n; y++){
 console.log(set)
 
 
-
+//TODO: refactor this into an other module and test it.
 //calculate and draw the fractal
 for (y = 0; y < n; y++){
   for(x = 0; x < m; x++) {
