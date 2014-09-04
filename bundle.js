@@ -14,75 +14,74 @@ module.exports = function (Constructor) {
 	
 
 },{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
-(function () {
-
-  function Fractal_module() {
+function Fractal_module() {
 
 
-    this.c = [-0.8 , 0.232];
-    this.k = 20;
-    this.fase = 250;
-    this.MAX_ITER = 256;
+  this.c = [0.285 , 0];
+  this.k = 20;
+  this.fase = 250;
+  this.MAX_ITER = 256;
 
-    this.n = 500;
-    this.m = this.n;
+  this.n = 500;
+  this.m = this.n;
 
-    this.boundary = 2;
-
-
-    this.step = this.boundary/this.n;
-    this.ini = 0 - this.step * (this.n/2);
+  this.boundary = 2;
 
 
-    //variables
-    this.i;
-    this.x;
-    this.y;
-    this.xi; 
-    this.yi;
-    
-    this.set = [];
-
-    var canvas = document.getElementsByTagName('canvas')[0];
-
-    canvas.width = this.n;
-    canvas.height = this.m;
-    
-
-    this.canvas = canvas.getContext("2d");
+  this.step = this.boundary/this.n;
+  this.ini = 0 - this.step * (this.n/2);
 
 
-    
-  }
+  //variables
+  this.i;
+  this.x;
+  this.y;
+  this.xi; 
+  this.yi;
+  
+  this.set = [];
 
-  //Methods!
-  require('./method/hsvToRgb')(Fractal_module);
-  require('./method/color')(Fractal_module);
-  require('./method/draw_pixel')(Fractal_module);
-  require('./method/norm')(Fractal_module);
-  require('./method/init_set')(Fractal_module);
-  require('./method/fractal')(Fractal_module);
+  var canvas = document.getElementsByTagName('canvas')[0];
 
+  canvas.width = this.n;
+  canvas.height = this.m;
+  
 
-  require('./calc')(Fractal_module);
-
+  this.canvas = canvas.getContext("2d");
 
 
   
+}
 
-  //kick start
-  var fractal_module = new Fractal_module();
+//Methods!
+require('./method/hsvToRgb')(Fractal_module);
+require('./method/color')(Fractal_module);
+require('./method/draw_pixel')(Fractal_module);
+require('./method/norm')(Fractal_module);
+require('./method/init_set')(Fractal_module);
+require('./method/fractal')(Fractal_module);
 
-  fractal_module.fractal();
+
+require('./calc')(Fractal_module);
 
 
-})();
+
+
+
+//kick start
+var fractal_module = new Fractal_module();
+
+fractal_module.fractal();
+
+
+
 
 },{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./method/color":"/home/flp/Code/juliaSets-v2/src/method/color/index.js","./method/draw_pixel":"/home/flp/Code/juliaSets-v2/src/method/draw_pixel/index.js","./method/fractal":"/home/flp/Code/juliaSets-v2/src/method/fractal/index.js","./method/hsvToRgb":"/home/flp/Code/juliaSets-v2/src/method/hsvToRgb/index.js","./method/init_set":"/home/flp/Code/juliaSets-v2/src/method/init_set/index.js","./method/norm":"/home/flp/Code/juliaSets-v2/src/method/norm/index.js"}],"/home/flp/Code/juliaSets-v2/src/method/color/index.js":[function(require,module,exports){
 module.exports = function (Constructor) {
 	
 	Constructor.prototype.color = function color(i) {
 
+		//TODO: return black when i = 0;
 		var c = this.hsvToRgb( (this.k * i  + this.fase) % 360 , 100, 90 );
 
 		return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
@@ -117,7 +116,7 @@ module.exports = function (Constructor) {
 
           //setting the inner most loop as the iteration loop makes
           //breaking it easier thus more performant
-          if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1 || this.i + 1 === this.MAX_ITER) {
+          if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 2 || this.i + 1 === this.MAX_ITER) {
             this.draw_pixel(this.x, this.y, this.set[this.y][this.x][2]);
             break;
           }
