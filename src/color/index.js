@@ -96,4 +96,6 @@ function color(i) {
 	return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
 };
 
-module.exports = color;
+module.exports = function () {
+	this.color = color;
+};

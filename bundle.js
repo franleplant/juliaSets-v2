@@ -16,11 +16,38 @@ function norm(x,y) {
 }
 
 
-module.exports = {
-	x: calc_x,
-	y: calc_y,
-	norm: norm
+module.exports = function () {
+	
+	this.calc = {
+		x: calc_x,
+		y: calc_y,
+		norm: norm		
+	}
 }
+	
+
+},{}],"/home/flp/Code/juliaSets-v2/src/canvas/draw_pixel.js":[function(require,module,exports){
+module.exports = function () {
+
+	this.draw_pixel = function draw_pixel(x,y,i) {
+	    
+	  	this.canvas.fillStyle = this.color(i);
+	  	this.canvas.fillRect(x,y,1,1);
+	};
+
+}
+},{}],"/home/flp/Code/juliaSets-v2/src/canvas/init.js":[function(require,module,exports){
+module.exports = function init() {
+  var canvas = document.getElementsByTagName('canvas')[0];
+
+  canvas.width = this.n;
+  canvas.height = this.m;
+  
+
+  this.canvas = canvas.getContext("2d");
+}
+
+
 
 },{}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
 /**
@@ -121,7 +148,9 @@ function color(i) {
 	return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
 };
 
-module.exports = color;
+module.exports = function () {
+	this.color = color;
+};
 },{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
 (function () {
 
@@ -136,7 +165,8 @@ module.exports = color;
 
   var m = n = 250;
   
-
+  this.n = n;
+  this.m = m;
 
   //variables
   var i;
@@ -148,30 +178,13 @@ module.exports = color;
 
 
 
-  var canvas = document.getElementsByTagName('canvas')[0];
+  require('./canvas/init').call(this);
+  require('./canvas/draw_pixel').call(this);
+  require('./color').call(this);
+  require('./calc').call(this);
 
-  canvas.width = n;
-  canvas.height = m;
-  canvas = canvas.getContext("2d");
 
-
-  //implicit binding
-  this.color = require('./color');
-
-  //TODO: refactor this module and improve the way it is appended
-  var calc = require('./calc');
-
-  this.calc = {
-    x: calc.x.bind(this),
-    y: calc.y.bind(this),
-    norm: calc.norm.bind(this)
-  }
-
-  this.draw_pixel = function draw_pixel(x,y,i) {
-    
-  	canvas.fillStyle = this.color(i);
-  	canvas.fillRect(x,y,1,1);
-  };
+  
 
 
   //initialize array values
@@ -273,4 +286,4 @@ var hsv = function (i) {
 
 
 
-},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}]},{},["/home/flp/Code/juliaSets-v2/src/main.js"]);
+},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./canvas/draw_pixel":"/home/flp/Code/juliaSets-v2/src/canvas/draw_pixel.js","./canvas/init":"/home/flp/Code/juliaSets-v2/src/canvas/init.js","./color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}]},{},["/home/flp/Code/juliaSets-v2/src/main.js"]);

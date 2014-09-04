@@ -11,7 +11,8 @@
 
   var m = n = 250;
   
-
+  this.n = n;
+  this.m = m;
 
   //variables
   var i;
@@ -23,30 +24,13 @@
 
 
 
-  var canvas = document.getElementsByTagName('canvas')[0];
+  require('./canvas/init').call(this);
+  require('./canvas/draw_pixel').call(this);
+  require('./color').call(this);
+  require('./calc').call(this);
 
-  canvas.width = n;
-  canvas.height = m;
-  canvas = canvas.getContext("2d");
 
-
-  //implicit binding
-  this.color = require('./color');
-
-  //TODO: refactor this module and improve the way it is appended
-  var calc = require('./calc');
-
-  this.calc = {
-    x: calc.x.bind(this),
-    y: calc.y.bind(this),
-    norm: calc.norm.bind(this)
-  }
-
-  this.draw_pixel = function draw_pixel(x,y,i) {
-    
-  	canvas.fillStyle = this.color(i);
-  	canvas.fillRect(x,y,1,1);
-  };
+  
 
 
   //initialize array values

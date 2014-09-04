@@ -15,8 +15,12 @@ function norm(x,y) {
 }
 
 
-module.exports = {
-	x: calc_x,
-	y: calc_y,
-	norm: norm
+module.exports = function () {
+	
+	this.calc = {
+		x: calc_x,
+		y: calc_y,
+		norm: norm		
+	}
 }
+	
