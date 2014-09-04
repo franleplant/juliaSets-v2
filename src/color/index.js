@@ -89,13 +89,14 @@ var hsvToRgb = function (h, s, v) {
 };
 
 
-function color(i) {
 
-	var c = hsvToRgb( (this.k * i  + this.fase) % 360 , 100, 90 );
 
-	return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
-};
+module.exports = function (Constructor) {
+	
+	Constructor.prototype.color = function color(i) {
 
-module.exports = function () {
-	this.color = color;
+		var c = hsvToRgb( (this.k * i  + this.fase) % 360 , 100, 90 );
+
+		return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+	};
 };

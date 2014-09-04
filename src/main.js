@@ -1,133 +1,52 @@
 (function () {
 
-  //constantes globales
-  var MAX_ITER = 256;
+  function Fractal_module() {
+
+    this.c = [-0.8 , 0.3];
+    this.k = 10;
+    this.fase = 150;
+    this.MAX_ITER = 256;
+
+    this.n = 250;
+    this.m = 250;
+
+    this.step = 1/this.n;
+    this.ini = 0 - this.step * (this.n/2);
 
 
+    //variables
+    this.i;
+    this.x;
+    this.y;
+    this.xi; 
+    this.yi;
+    
+    this.set = [];
 
-  this.c = [-0.8 , 0.3];
-  this.k = 10;
-  this.fase = 150;
+    var canvas = document.getElementsByTagName('canvas')[0];
 
-  var m = n = 250;
-  
-  this.n = n;
-  this.m = m;
+    canvas.width = this.n;
+    canvas.height = this.m;
+    
 
-  //variables
-  var i;
-  var x,y;
-  var xi, yi;
-  var step = 1/n;
-  var ini = 0 - step * (n/2);
-  var set = [];
-
+    this.canvas = canvas.getContext("2d");
 
 
-  require('./canvas/init').call(this);
-  require('./canvas/draw_pixel').call(this);
-  require('./color').call(this);
-  require('./calc').call(this);
-
-
-  
-
-
-  //initialize array values
-  for (y = 0; y < n; y++){
-    set[y] = [];
-    for(x = 0; x < m; x++) {
-      //el array esta formado por [x,y, numero_de_iteraciones]
-      set[y][x] = [ini + step * x, -(ini + step*y), 0 ]
-
-    }
+    
   }
 
 
-
-  //TODO: refactor this into an other module and test it.
-  //calculate and draw the fractal
-  for (y = 0; y < n; y++){
-    for(x = 0; x < m; x++) {
-      for (i = 0; i < MAX_ITER; i++){
-
-        //setting the inner most loop as the iteration loop makes
-        //breaking it easier thus more performant
-        if (this.calc.norm(set[y][x][0], set[y][x][1]) > 1) {
-          this.draw_pixel(x, y, set[y][x][2]);
-          break;
-        }
-
-        set[y][x][0] = this.calc.x(set[y][x][0],set[y][x][1]);
-        set[y][x][1] = this.calc.y(set[y][x][0],set[y][x][1]);
-        set[y][x][2] += 1;
-
-      }
-    }
-  }
+  require('./canvas')(Fractal_module);
+  require('./calc')(Fractal_module);
+  require('./utils/norm')(Fractal_module);
 
 
-}).call({})
+  
+
+  //kick start
+  var context = new Fractal_module();
+  require('./fractal').call(context);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-var hsv = function (i) {
-
-	return {
-		h: k * i % 360,
-		s: 100,
-		v: 85
-	}
-
-};
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+})();

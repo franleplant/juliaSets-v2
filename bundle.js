@@ -1,55 +1,33 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/flp/Code/juliaSets-v2/src/calc/index.js":[function(require,module,exports){
 'use strict';
 
-//z^2
-function calc_x(x,y) {
-  return Math.pow(x, 2) - Math.pow(y, 2) + this.c[0];
-}
-
-function calc_y(x,y) {
-  return 2*x*y + this.c[1];
-}
-
-
-function norm(x,y) {
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y,2))
-}
-
-
-module.exports = function () {
+module.exports = function (Constructor) {
 	
-	this.calc = {
-		x: calc_x,
-		y: calc_y,
-		norm: norm		
-	}
+	Constructor.prototype.calc_x = function calc_x(x,y) {
+			return Math.pow(x, 2) - Math.pow(y, 2) + this.c[0];
+		};
+		
+	Constructor.prototype.calc_y =  function calc_y(x,y) {
+  			return 2*x*y + this.c[1];
+		};
 }
 	
 
-},{}],"/home/flp/Code/juliaSets-v2/src/canvas/draw_pixel.js":[function(require,module,exports){
-module.exports = function () {
+},{}],"/home/flp/Code/juliaSets-v2/src/canvas/index.js":[function(require,module,exports){
+module.exports = function (Constructor) {
 
-	this.draw_pixel = function draw_pixel(x,y,i) {
+	require('../color')(Constructor);
+
+
+
+	Constructor.prototype.draw_pixel = function draw_pixel(x,y,i) {
 	    
 	  	this.canvas.fillStyle = this.color(i);
 	  	this.canvas.fillRect(x,y,1,1);
 	};
 
 }
-},{}],"/home/flp/Code/juliaSets-v2/src/canvas/init.js":[function(require,module,exports){
-module.exports = function init() {
-  var canvas = document.getElementsByTagName('canvas')[0];
-
-  canvas.width = this.n;
-  canvas.height = this.m;
-  
-
-  this.canvas = canvas.getContext("2d");
-}
-
-
-
-},{}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
+},{"../color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
 /**
  * HSV to RGB color conversion
  *
@@ -141,149 +119,117 @@ var hsvToRgb = function (h, s, v) {
 };
 
 
-function color(i) {
 
-	var c = hsvToRgb( (this.k * i  + this.fase) % 360 , 100, 90 );
 
-	return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+module.exports = function (Constructor) {
+	
+	Constructor.prototype.color = function color(i) {
+
+		var c = hsvToRgb( (this.k * i  + this.fase) % 360 , 100, 90 );
+
+		return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+	};
 };
-
+},{}],"/home/flp/Code/juliaSets-v2/src/fractal/index.js":[function(require,module,exports){
 module.exports = function () {
-	this.color = color;
-};
-},{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
-(function () {
-
-  //constantes globales
-  var MAX_ITER = 256;
-
-
-
-  this.c = [-0.8 , 0.3];
-  this.k = 10;
-  this.fase = 150;
-
-  var m = n = 250;
-  
-  this.n = n;
-  this.m = m;
-
-  //variables
-  var i;
-  var x,y;
-  var xi, yi;
-  var step = 1/n;
-  var ini = 0 - step * (n/2);
-  var set = [];
-
-
-
-  require('./canvas/init').call(this);
-  require('./canvas/draw_pixel').call(this);
-  require('./color').call(this);
-  require('./calc').call(this);
-
-
+	require('./init').call(this);
   
 
 
-  //initialize array values
-  for (y = 0; y < n; y++){
-    set[y] = [];
-    for(x = 0; x < m; x++) {
-      //el array esta formado por [x,y, numero_de_iteraciones]
-      set[y][x] = [ini + step * x, -(ini + step*y), 0 ]
-
-    }
-  }
-
-
-
-  //TODO: refactor this into an other module and test it.
-  //calculate and draw the fractal
-  for (y = 0; y < n; y++){
-    for(x = 0; x < m; x++) {
-      for (i = 0; i < MAX_ITER; i++){
+   //calculate and draw the fractal
+  for (this.y = 0; this.y < this.n; this.y++){
+    for(this.x = 0; this.x < this.m; this.x++) {
+      for (this.i = 0; this.i < this.MAX_ITER; this.i++){
 
         //setting the inner most loop as the iteration loop makes
         //breaking it easier thus more performant
-        if (this.calc.norm(set[y][x][0], set[y][x][1]) > 1) {
-          this.draw_pixel(x, y, set[y][x][2]);
+        if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1) {
+          this.draw_pixel(this.x, this.y, this.set[this.y][this.x][2]);
           break;
         }
 
-        set[y][x][0] = this.calc.x(set[y][x][0],set[y][x][1]);
-        set[y][x][1] = this.calc.y(set[y][x][0],set[y][x][1]);
-        set[y][x][2] += 1;
+        this.set[this.y][this.x][0] = this.calc_x(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
+        this.set[this.y][this.x][1] = this.calc_y(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
+        this.set[this.y][this.x][2] += 1;
 
       }
     }
   }
 
+}
+},{"./init":"/home/flp/Code/juliaSets-v2/src/fractal/init.js"}],"/home/flp/Code/juliaSets-v2/src/fractal/init.js":[function(require,module,exports){
+module.exports = function () {
+	  //initialize array values
+  for (this.y = 0; this.y < this.n; this.y++){
+    this.set[this.y] = [];
+    for(this.x = 0; this.x < this.m; this.x++) {
+      //el array esta formado por [this.x,y, numero_de_iteraciones]
+      this.set[this.y][this.x] = [this.ini + this.step * this.x, -(this.ini + this.step*this.y), 0 ]
 
-}).call({})
+    }
+  }
+
+}
+},{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
+(function () {
+
+  function Fractal_module() {
+
+    this.c = [-0.8 , 0.3];
+    this.k = 10;
+    this.fase = 150;
+    this.MAX_ITER = 256;
+
+    this.n = 250;
+    this.m = 250;
+
+    this.step = 1/this.n;
+    this.ini = 0 - this.step * (this.n/2);
+
+
+    //variables
+    this.i;
+    this.x;
+    this.y;
+    this.xi; 
+    this.yi;
+    
+    this.set = [];
+
+    var canvas = document.getElementsByTagName('canvas')[0];
+
+    canvas.width = this.n;
+    canvas.height = this.m;
+    
+
+    this.canvas = canvas.getContext("2d");
+
+
+    
+  }
+
+
+  require('./canvas')(Fractal_module);
+  require('./calc')(Fractal_module);
+  require('./utils/norm')(Fractal_module);
+
+
+  
+
+  //kick start
+  var context = new Fractal_module();
+  require('./fractal').call(context);
 
 
 
+})();
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-var hsv = function (i) {
-
-	return {
-		h: k * i % 360,
-		s: 100,
-		v: 85
+},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./canvas":"/home/flp/Code/juliaSets-v2/src/canvas/index.js","./fractal":"/home/flp/Code/juliaSets-v2/src/fractal/index.js","./utils/norm":"/home/flp/Code/juliaSets-v2/src/utils/norm.js"}],"/home/flp/Code/juliaSets-v2/src/utils/norm.js":[function(require,module,exports){
+module.exports = function (Constructor) {
+	
+	Constructor.prototype.norm = function norm(x,y) {
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y,2))
 	}
 
-};
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./canvas/draw_pixel":"/home/flp/Code/juliaSets-v2/src/canvas/draw_pixel.js","./canvas/init":"/home/flp/Code/juliaSets-v2/src/canvas/init.js","./color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}]},{},["/home/flp/Code/juliaSets-v2/src/main.js"]);
+}
+},{}]},{},["/home/flp/Code/juliaSets-v2/src/main.js"]);
