@@ -35,18 +35,19 @@
     
   }
 
-
-  require('./canvas')(Fractal_module);
+  //Methods!
+  require('./draw_pixel')(Fractal_module);
   require('./calc')(Fractal_module);
   require('./utils/norm')(Fractal_module);
+  require('./fractal')(Fractal_module);
 
 
   
 
   //kick start
-  var context = new Fractal_module();
-  require('./fractal').call(context);
+  var fractal_module = new Fractal_module();
 
+  fractal_module.fractal();
 
 
 })();

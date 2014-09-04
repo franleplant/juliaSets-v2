@@ -13,21 +13,7 @@ module.exports = function (Constructor) {
 }
 	
 
-},{}],"/home/flp/Code/juliaSets-v2/src/canvas/index.js":[function(require,module,exports){
-module.exports = function (Constructor) {
-
-	require('../color')(Constructor);
-
-
-
-	Constructor.prototype.draw_pixel = function draw_pixel(x,y,i) {
-	    
-	  	this.canvas.fillStyle = this.color(i);
-	  	this.canvas.fillRect(x,y,1,1);
-	};
-
-}
-},{"../color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
+},{}],"/home/flp/Code/juliaSets-v2/src/color/index.js":[function(require,module,exports){
 /**
  * HSV to RGB color conversion
  *
@@ -130,44 +116,69 @@ module.exports = function (Constructor) {
 		return 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
 	};
 };
-},{}],"/home/flp/Code/juliaSets-v2/src/fractal/index.js":[function(require,module,exports){
-module.exports = function () {
-	require('./init').call(this);
-  
+},{}],"/home/flp/Code/juliaSets-v2/src/draw_pixel/index.js":[function(require,module,exports){
+module.exports = function (Constructor) {
+
+	require('../color')(Constructor);
 
 
-   //calculate and draw the fractal
-  for (this.y = 0; this.y < this.n; this.y++){
-    for(this.x = 0; this.x < this.m; this.x++) {
-      for (this.i = 0; this.i < this.MAX_ITER; this.i++){
 
-        //setting the inner most loop as the iteration loop makes
-        //breaking it easier thus more performant
-        if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1) {
-          this.draw_pixel(this.x, this.y, this.set[this.y][this.x][2]);
-          break;
+	Constructor.prototype.draw_pixel = function draw_pixel(x,y,i) {
+	    
+	  	this.canvas.fillStyle = this.color(i);
+	  	this.canvas.fillRect(x,y,1,1);
+	};
+
+}
+},{"../color":"/home/flp/Code/juliaSets-v2/src/color/index.js"}],"/home/flp/Code/juliaSets-v2/src/fractal/index.js":[function(require,module,exports){
+module.exports = function (Constructor) {
+	require('./init')(Constructor);
+
+  Constructor.prototype.fractal = function () {
+
+    this.init_set();
+
+     //calculate and draw the fractal
+    for (this.y = 0; this.y < this.n; this.y++){
+      for(this.x = 0; this.x < this.m; this.x++) {
+        for (this.i = 0; this.i < this.MAX_ITER; this.i++){
+
+          //setting the inner most loop as the iteration loop makes
+          //breaking it easier thus more performant
+          if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1) {
+            this.draw_pixel(this.x, this.y, this.set[this.y][this.x][2]);
+            break;
+          }
+
+          this.set[this.y][this.x][0] = this.calc_x(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
+          this.set[this.y][this.x][1] = this.calc_y(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
+          this.set[this.y][this.x][2] += 1;
+
         }
-
-        this.set[this.y][this.x][0] = this.calc_x(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
-        this.set[this.y][this.x][1] = this.calc_y(this.set[this.y][this.x][0],this.set[this.y][this.x][1]);
-        this.set[this.y][this.x][2] += 1;
-
       }
     }
+
+
   }
 
 }
 },{"./init":"/home/flp/Code/juliaSets-v2/src/fractal/init.js"}],"/home/flp/Code/juliaSets-v2/src/fractal/init.js":[function(require,module,exports){
-module.exports = function () {
-	  //initialize array values
-  for (this.y = 0; this.y < this.n; this.y++){
-    this.set[this.y] = [];
-    for(this.x = 0; this.x < this.m; this.x++) {
-      //el array esta formado por [this.x,y, numero_de_iteraciones]
-      this.set[this.y][this.x] = [this.ini + this.step * this.x, -(this.ini + this.step*this.y), 0 ]
+module.exports = function (Constructor) {
 
-    }
-  }
+	//initialize array values
+	Constructor.prototype.init_set = function () {
+		  for (this.y = 0; this.y < this.n; this.y++){
+		    this.set[this.y] = [];
+		    for(this.x = 0; this.x < this.m; this.x++) {
+		      //el array esta formado por [this.x,y, numero_de_iteraciones]
+		      this.set[this.y][this.x] = [this.ini + this.step * this.x, -(this.ini + this.step*this.y), 0 ]
+
+		    }
+		  }
+
+	}
+	  
+	
 
 }
 },{}],"/home/flp/Code/juliaSets-v2/src/main.js":[function(require,module,exports){
@@ -208,23 +219,24 @@ module.exports = function () {
     
   }
 
-
-  require('./canvas')(Fractal_module);
+  //Methods!
+  require('./draw_pixel')(Fractal_module);
   require('./calc')(Fractal_module);
   require('./utils/norm')(Fractal_module);
+  require('./fractal')(Fractal_module);
 
 
   
 
   //kick start
-  var context = new Fractal_module();
-  require('./fractal').call(context);
+  var fractal_module = new Fractal_module();
 
+  fractal_module.fractal();
 
 
 })();
 
-},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./canvas":"/home/flp/Code/juliaSets-v2/src/canvas/index.js","./fractal":"/home/flp/Code/juliaSets-v2/src/fractal/index.js","./utils/norm":"/home/flp/Code/juliaSets-v2/src/utils/norm.js"}],"/home/flp/Code/juliaSets-v2/src/utils/norm.js":[function(require,module,exports){
+},{"./calc":"/home/flp/Code/juliaSets-v2/src/calc/index.js","./draw_pixel":"/home/flp/Code/juliaSets-v2/src/draw_pixel/index.js","./fractal":"/home/flp/Code/juliaSets-v2/src/fractal/index.js","./utils/norm":"/home/flp/Code/juliaSets-v2/src/utils/norm.js"}],"/home/flp/Code/juliaSets-v2/src/utils/norm.js":[function(require,module,exports){
 module.exports = function (Constructor) {
 	
 	Constructor.prototype.norm = function norm(x,y) {
