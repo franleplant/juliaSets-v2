@@ -126,15 +126,16 @@ module.exports = color;
 (function () {
 
   //constantes globales
-  var MAX_ITER = 100;
+  var MAX_ITER = 256;
 
-  this.c = [0.285 ,0];
-  this.k = 8;
-  this.fase = 210;
+
+
+  this.c = [-0.8 , 0.3];
+  this.k = 10;
+  this.fase = 150;
 
   var m = n = 250;
-  //no idea what those parameters are
-
+  
 
 
   //variables
@@ -167,8 +168,7 @@ module.exports = color;
   }
 
   this.draw_pixel = function draw_pixel(x,y,i) {
-
-    debugger;    
+    
   	canvas.fillStyle = this.color(i);
   	canvas.fillRect(x,y,1,1);
   };
@@ -207,8 +207,6 @@ module.exports = color;
     }
   }
 
-
-console.log(set[20])
 
 }).call({})
 
