@@ -186,15 +186,19 @@ module.exports = function (Constructor) {
 
   function Fractal_module() {
 
-    this.c = [-0.8 , 0.3];
-    this.k = 10;
+
+    this.c = [-0.8 , 0.232];
+    this.k = 20;
     this.fase = 150;
     this.MAX_ITER = 256;
 
-    this.n = 250;
-    this.m = 250;
+    this.n = 500;
+    this.m = this.n;
 
-    this.step = 1/this.n;
+    this.boundary = 2;
+
+
+    this.step = this.boundary/this.n;
     this.ini = 0 - this.step * (this.n/2);
 
 
