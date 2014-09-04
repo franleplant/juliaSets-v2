@@ -5,7 +5,7 @@
 
     this.c = [-0.8 , 0.232];
     this.k = 20;
-    this.fase = 150;
+    this.fase = 250;
     this.MAX_ITER = 256;
 
     this.n = 500;
@@ -40,10 +40,16 @@
   }
 
   //Methods!
-  require('./draw_pixel')(Fractal_module);
+  require('./method/hsvToRgb')(Fractal_module);
+  require('./method/color')(Fractal_module);
+  require('./method/draw_pixel')(Fractal_module);
+  require('./method/norm')(Fractal_module);
+  require('./method/init_set')(Fractal_module);
+  require('./method/fractal')(Fractal_module);
+
+
   require('./calc')(Fractal_module);
-  require('./utils/norm')(Fractal_module);
-  require('./fractal')(Fractal_module);
+
 
 
   

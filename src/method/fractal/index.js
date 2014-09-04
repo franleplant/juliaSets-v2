@@ -11,7 +11,7 @@ module.exports = function (Constructor) {
 
           //setting the inner most loop as the iteration loop makes
           //breaking it easier thus more performant
-          if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1) {
+          if (this.norm(this.set[this.y][this.x][0], this.set[this.y][this.x][1]) > 1 || this.i + 1 === this.MAX_ITER) {
             this.draw_pixel(this.x, this.y, this.set[this.y][this.x][2]);
             break;
           }
