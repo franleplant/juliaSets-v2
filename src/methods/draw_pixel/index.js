@@ -1,6 +1,7 @@
 module.exports = function (Constructor) {
 
-	require('../color')(Constructor);
+	//TODO:
+	//require('../color')(Constructor);
 
 
 

@@ -1,5 +1,4 @@
 module.exports = function (Constructor) {
-	require('./init')(Constructor);
 
   Constructor.prototype.fractal = function () {
 
